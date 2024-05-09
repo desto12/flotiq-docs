@@ -43,18 +43,24 @@ INDENT=`grep -E '\s*- Plugins API Reference' $PROJECT_DIR/mkdocs.yml | grep -Eo 
 
 START_PLUGINS_NAV_PATTERN="# START_PLUGINS_FILES"
 END_PLUGINS_NAV_PATTERN="# END_PLUGINS_FILES"
+echo "test1"
 sed -i '' -e "/$START_PLUGINS_NAV_PATTERN/,/$END_PLUGINS_NAV_PATTERN/{ /$START_PLUGINS_NAV_PATTERN/{n; d;}; /$END_PLUGINS_NAV_PATTERN/d; }" "$PROJECT_DIR/mkdocs.yml"
 for FILE in $FILES; do
     # Delete divs and TOCs
+    echo "test2"
     sed -i 's/<div /<div markdown="1"/g' "$MD_FILES_DIRECTORY/$FILE"
+    echo "test3"
     sed -i 's#.docs/public/#../#g' "$MD_FILES_DIRECTORY/$FILE"
+    echo "test4"
     sed -i '/\[\[_TOC_\]\]/d' "$MD_FILES_DIRECTORY/$FILE"
+    echo "test5"
     HEADER=$(grep -m 1 '^# ' "$MD_FILES_DIRECTORY/$FILE" | awk -F 'Reference:' '{print $2}' | awk '{$1=$1};1')
     if [ -z "$HEADER" ]; then
         echo "Header is empty."
     else
         # New content to insert
         LINE="${INDENT}  - '$HEADER': plugins/PluginDocs/$FILE"
-        sed -i '/# START_PLUGINS_FILES/a\'"$LINE" $PROJECT_DIR/mkdocs.yml
+        echo "test6"
+        sed -i '' -e "/# START_PLUGINS_FILES/a\\$LINE" "$PROJECT_DIR/mkdocs.yml"
     fi
 done
