@@ -34,16 +34,16 @@ MD_FILES_DIRECTORY="$DESTINATION_DIR/PluginDocs"
 # File with section ordered list
 INDEX_FILE="$MD_FILES_DIRECTORY/index.md"
 # Delete spaces before markdown code
-sed -i 's/^\s*#/#/' "$INDEX_FILE"
+sed -i '' 's/^[[:space:]]*#/#/' "$INDEX_FILE"
 
 # Extract the file names in reverse order
-FILES=$(grep -o '\(.*\)' "$INDEX_FILE" | awk -F '[()]' '{print $2}' | sed 's/\.\/\([^\/]*\)/\1/' | tr ' ' '\n' | tac | xargs)
+FILES=$(grep -o '\(.*\)' "$INDEX_FILE" | awk -F '[()]' '{print $2}' | sed 's/\.\/\([^\/]*\)/\1/' | tr ' ' '\n' | tail -r | awk '{a[NR]=$0} END {for (i=NR; i>0;i--) print a[i]}' | xargs)
 # Loop through each file name and process them
 INDENT=`grep -E '\s*- Plugins API Reference' $PROJECT_DIR/mkdocs.yml | grep -Eo '^\s*'`
 
 START_PLUGINS_NAV_PATTERN="# START_PLUGINS_FILES"
 END_PLUGINS_NAV_PATTERN="# END_PLUGINS_FILES"
-sed -i "/$START_PLUGINS_NAV_PATTERN/,/$END_PLUGINS_NAV_PATTERN/{/$START_PLUGINS_NAV_PATTERN/n;/$END_PLUGINS_NAV_PATTERN/!d;}" $PROJECT_DIR/mkdocs.yml
+sed -i '' -e "/$START_PLUGINS_NAV_PATTERN/,/$END_PLUGINS_NAV_PATTERN/{ /$START_PLUGINS_NAV_PATTERN/{n; d;}; /$END_PLUGINS_NAV_PATTERN/d; }" "$PROJECT_DIR/mkdocs.yml"
 for FILE in $FILES; do
     # Delete divs and TOCs
     sed -i 's/<div /<div markdown="1"/g' "$MD_FILES_DIRECTORY/$FILE"
