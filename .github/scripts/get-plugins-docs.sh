@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # URL that returns the list of files
-if [ -z "$SITE_URL" ]; then
-    SITE_URL="https://flotiq-frontend-965-feature-24617-res-j1km42.dev.cdwv.pl"
-    echo "Setting default value for SITE_URL: $SITE_URL"
+if [ -z "$SOURCE_EDITOR_URL" ]; then
+    echo "Variable SOURCE_EDITOR_URL not found"
+    exit 1
 else
-    echo "Found env SITE_URL with value: $SITE_URL"
+    echo "Found env with source editor url!"
 fi
 
 FILES_LIST_URL="$SITE_URL/markdown-docs/files.txt"
