@@ -1,5 +1,5 @@
 #!/bin/bash
-
+SOURCE_EDITOR_URL=${{ vars.SOURCE_EDITOR_URL }}
 # URL that returns the list of files
 if [ -z "$SOURCE_EDITOR_URL" ]; then
     echo "Variable SOURCE_EDITOR_URL not found"
